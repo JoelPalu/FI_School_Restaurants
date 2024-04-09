@@ -5,9 +5,9 @@ export function mapRestaurants(restaurants) {
 
   const customIcon = L.icon({
     iconUrl: 'marker-icon-2x.png', // replace with the path to your icon image
-    iconSize: [28, 45], // size of the icon
+    iconSize: [25, 41], // size of the icon
     iconAnchor: [19, 32], // point of the icon which will correspond to marker's location
-    popupAnchor: [-3, -25], // point from which the popup should open relative to the iconAnchor
+    popupAnchor: [-6, -28], // point from which the popup should open relative to the iconAnchor
   });
 
   async function success(position) {
@@ -39,8 +39,8 @@ export function mapRestaurants(restaurants) {
       });
       marker.on('click', function() {
         const markerLatLng = marker.getLatLng();
-        const offsetLatLng = L.latLng(markerLatLng.lat, markerLatLng.lng + 0.04); // offset 0.01 degree to the left
-        map.setView(offsetLatLng);
+        const offsetLatLng = L.latLng(markerLatLng.lat, markerLatLng.lng + 0.005); // offset 0.01 degree to the left
+        map.setView(offsetLatLng, 16);
       });
     });
   }
