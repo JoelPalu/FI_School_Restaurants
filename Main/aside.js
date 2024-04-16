@@ -27,7 +27,6 @@ export async function getMenu(restaurant, lang) {
     const data = await response.json();
     const menu = data['courses'];
     aside.innerHTML = restaurantModal(restaurant, menu);
-    //aside.showModal();
   } catch (error) {
     console.error(error);
   }
@@ -41,7 +40,9 @@ export function adjustLayout() {
   if (daily.innerHTML.trim() === '') {
     map.style.width = '100%';
     daily.style.width = '0';
+    daily.style.display = 'flex';
   } else {
+    daily.style.display = 'block';
     map.style.width = '70%';
     daily.style.width = '30%';
   }

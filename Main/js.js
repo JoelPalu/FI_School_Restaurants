@@ -1,16 +1,17 @@
 import {mapRestaurants} from './map.js';
 import {adjustLayout} from './aside.js';
+import {generateNavbar} from './navbar.js';
 
-//Fetches the restaurants from the API and returns them as a JSON object
+// Fetches the restaurants from the API and returns them as a JSON object
 async function getRestaurants() {
   const response = await fetch('https://10.120.32.94/restaurant/api/v1/restaurants');
-  const restaurants  = await response.json();
+  const restaurants = await response.json();
   console.log(restaurants);
   return restaurants;
 }
 
 const restaurants = getRestaurants();
-
+await generateNavbar();
 // Displays the restaurants on the map
 restaurants.then((restaurants) => {
   mapRestaurants(restaurants);
@@ -25,7 +26,6 @@ observer.observe(document.getElementById('Daily'), {childList: true});
   const loginText = document.getElementById('login-text');
   const avatar = document.getElementById('avatar');
   if (localStorage.getItem('token') && localStorage.getItem('user')) {
-    // check if token valid
     try {
       const fetchOptions = {
         headers: {
@@ -53,7 +53,6 @@ observer.observe(document.getElementById('Daily'), {childList: true});
       console.log(e.message);
     }
   } else {
-    // when starting app and nothing in sessionStorage
     loginText.textContent = 'Login';
   }
 })();

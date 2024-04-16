@@ -1,4 +1,6 @@
+import {generateNavbar} from '../navbar.js';
 
+await generateNavbar();
 let user = JSON.parse(sessionStorage.getItem('user'));
 console.log(user);
 
@@ -13,7 +15,8 @@ const swithToLog = document.getElementById('log_log_button');
 const loginBox = document.getElementById('login_box');
 const registerBox = document.getElementById('register_box');
 const uploadAvatar = document.getElementById('profile-avatar');
-const avatar = document.getElementById('profile-avatar-preview');
+const avatarPrew = document.getElementById('profile-avatar-preview');
+const avatar = document.getElementById('avatar');
 
 
 const showProfile = (logged) => {
@@ -91,7 +94,9 @@ uploadAvatar.addEventListener('change', async (evt) => {
 
   const response = await fetch('https://10.120.32.94/restaurant/api/v1/users/avatar', fetchOptions);
   const json = await response.json();
-  console.log(json);
+  const newAvatarUrl = 'https://10.120.32.94/restaurant/uploads/' + json.data.avatar;
+  avatar.src = newAvatarUrl;
+  avatarPrew.src = newAvatarUrl;
 });
 
 // logout
@@ -123,13 +128,11 @@ swithToLog.addEventListener('click', async (evt) => {
 });
 
 async function generateProfile(user){
-  const profileName = document.getElementById('profile-name');
   const prfileUsername = document.getElementById('profile-username');
   const profileEmail = document.getElementById('profile-email');
-  profileName.value = user.name;
   prfileUsername.value = user.username;
   profileEmail.value = user.email;
-};
+}
 
 
 // when page loaded
@@ -152,6 +155,7 @@ async function generateProfile(user){
         localStorage.setItem('user', JSON.stringify(await response.json()));
         const user = JSON.parse(localStorage.getItem('user'));
         console.log(user);
+        avatarPrew.src = 'https://10.120.32.94/restaurant/uploads/'+ user.avatar;
         avatar.src = 'https://10.120.32.94/restaurant/uploads/'+ user.avatar;
         loginText.textContent = user.username;
         await generateProfile(user);
