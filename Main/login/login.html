@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LogIn</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="css/login.css">
+  <script src="serialize.js" defer></script>
+  <script type="module" src="login.js" defer></script>
+
+</head>
+<header>
+  <h1>Finnish School Restaurants</h1>
+  <nav id="nav">
+    <a href="../html.html">Home</a>
+    <a href="">About</a>
+    <a href="">Contact</a>
+    <a href="/FI_School_Restaurants/Main/login/login.html" id="login-text">LogIn</a>
+  </nav>
+</header>
+<body>
+<main id="login_main">
+  <div id="login_box">
+    <div id="login_box_content">
+      <form id="loginForm">
+        <label for="username">Username:</label>
+        <input type="text" name="username" id="username">
+        <label for="password">Password:</label>
+        <input type="password" name="password" id="password">
+        <button type="submit">Log In</button>
+      </form>
+      <p id="log_reg_button">Register</p>
+    </div>
+  </div>
+  <div id="register_box">
+    <div id="register_box_content">
+      <form id="registerForm">
+        <label for="reg_name">Name:</label>
+        <input type="text" name="name" id="reg_name">
+        <label for="reg_username">Username:</label>
+        <input type="text" name="username" id="reg_username">
+        <label for="reg_email">Email:</label>
+        <input type="email" name="email" id="reg_email">
+        <label for="reg_password">Password:</label>
+        <input type="password" name="password" id="reg_password">
+        <button type="submit">Register</button>
+      </form>
+      <p id="log_log_button">Login</p>
+    </div>
+  </div>
+</main>
+<div id="profile-box">
+  <div id="profile-form-box">
+    <form id="profile-update-form">
+      <label for="profile-name">Name:</label>
+      <input type="text" name="name" id="profile-name">
+      <label for="profile-username">Username: </label>
+      <input type="text" name="username" id="profile-username">
+      <label for="profile-email">Email:</label>
+      <input type="email" name="email" id="profile-email">
+      <label for="profile-password">Password:</label>
+      <input type="password" name="password" id="profile-password">
+      <button type="submit">Save</button>
+    </form>
+  </div>
+  <div id="profile-avatar-box">
+    <form id="profile-update-avatar">
+      <label for="profile-avatar">Avatar:</label>
+      <input type="file" name="filename" id="profile-avatar">
+      <button type="submit">Upload</button>
+    </form>
+  </div>
+
+  <p id="profile-name"></p>
+  <button id="log-out">Log out</button>
+</div>
+</body>
+<footer>
+  <p>©Kirill Saveliev @ Metropolia 2024 </p>
+</footer>
+</html>
