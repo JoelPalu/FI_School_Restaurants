@@ -23,6 +23,7 @@ observer.observe(document.getElementById('Daily'), {childList: true});
 // when page loaded
 (async () => {
   const loginText = document.getElementById('login-text');
+  const avatar = document.getElementById('avatar');
   if (localStorage.getItem('token') && localStorage.getItem('user')) {
     // check if token valid
     try {
@@ -31,11 +32,21 @@ observer.observe(document.getElementById('Daily'), {childList: true});
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
       };
-      const response = await fetch('http://localhost:3000/api/v1/auth/me', fetchOptions);
+      const response = await fetch('https://10.120.32.94/restaurant/api/v1/users/token', fetchOptions);
       if (!response.ok) {
         loginText.textContent = 'Login';
       } else {
+        console.log('RUN TOKEN FETCH');
+        localStorage.removeItem('user');
+        localStorage.setItem('user', JSON.stringify(await response.json()));
         const user = JSON.parse(localStorage.getItem('user'));
+        console.log(user);
+        if (user.avatar){
+          avatar.src = 'https://10.120.32.94/restaurant/uploads/'+ user.avatar;
+        } else {
+          avatar.src = 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+        }
+
         loginText.textContent = user.username;
       }
     } catch (e) {

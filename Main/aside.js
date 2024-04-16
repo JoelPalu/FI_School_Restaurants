@@ -27,7 +27,7 @@ export async function getMenu(restaurant, lang) {
     const data = await response.json();
     const menu = data['courses'];
     aside.innerHTML = restaurantModal(restaurant, menu);
-    aside.showModal();
+    //aside.showModal();
   } catch (error) {
     console.error(error);
   }

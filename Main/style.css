@@ -1,3 +1,4 @@
+
 #main {
   display: flex;
   justify-content: space-between;
@@ -17,6 +18,28 @@
   padding: 1em;
   box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
   transition: width 0.3s ease-in-out;
+}
+
+#nav-profile-box {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+
+
+#nav-profile-box-avatar{
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+#nav-profile-box-avatar img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 #nav {

@@ -12,6 +12,8 @@ const swithToReg = document.getElementById('log_reg_button');
 const swithToLog = document.getElementById('log_log_button');
 const loginBox = document.getElementById('login_box');
 const registerBox = document.getElementById('register_box');
+const uploadAvatar = document.getElementById('profile-avatar');
+const avatar = document.getElementById('profile-avatar-preview');
 
 
 const showProfile = (logged) => {
@@ -21,11 +23,7 @@ const showProfile = (logged) => {
   profile.style.display = logged ? 'flex' : 'none';
 };
 
-
-loginForm.addEventListener('submit', async (evt) => {
-  evt.preventDefault();
-  // eslint-disable-next-line no-undef
-  const data = serializeJson(loginForm);
+const loginFunc = async (data) => {
   const fetchOptions = {
     method: 'POST',
     headers: {
@@ -34,9 +32,9 @@ loginForm.addEventListener('submit', async (evt) => {
     body: JSON.stringify(data),
   };
 
-  const response = await fetch( 'https://10.120.32.94/restaurant/api/v1/auth/login', fetchOptions);
+  const response = await fetch('https://10.120.32.94/restaurant/api/v1/auth/login', fetchOptions);
   const json = await response.json();
-  if (!json.user) {
+  if (!json.data.username) {
     alert(json.error.message);
   } else {
     // save token and user
@@ -46,12 +44,19 @@ loginForm.addEventListener('submit', async (evt) => {
     loginText.textContent = user.username;
     showProfile(true);
   }
+};
+
+loginForm.addEventListener('submit', async (evt) => {
+  evt.preventDefault();
+
+  const data = serializeJson(loginForm);
+  await loginFunc(data);
 });
 
 registerForm.addEventListener('submit', async (evt) => {
   evt.preventDefault();
   // eslint-disable-next-line no-undef
-  const data = serializeJson(loginForm);
+  const data = serializeJson(registerForm);
   const fetchOptions = {
     method: 'POST',
     headers: {
@@ -62,16 +67,31 @@ registerForm.addEventListener('submit', async (evt) => {
 
   const response = await fetch( 'https://10.120.32.94/restaurant/api/v1/users', fetchOptions);
   const json = await response.json();
-  if (!json.user) {
+  console.log(json);
+  if (!json.data.username) {
     alert(json.error.message);
   } else {
-    // save token and user
-    localStorage.setItem('token', json.token);
-    localStorage.setItem('user', JSON.stringify(json.data));
-    user = JSON.parse(localStorage.getItem('user'));
-    loginText.textContent = user.username;
-    showProfile(true);
+    await loginFunc({username: data.username, password: data.password});
   }
+});
+
+uploadAvatar.addEventListener('change', async (evt) => {
+
+
+  const formData = new FormData();
+  formData.append('avatar', uploadAvatar.files[0]);
+
+  const fetchOptions = {
+    method: 'POST',
+    headers: {
+      Authorization: 'Bearer ' + localStorage.getItem('token'),
+    },
+    body: formData,
+  };
+
+  const response = await fetch('https://10.120.32.94/restaurant/api/v1/users/avatar', fetchOptions);
+  const json = await response.json();
+  console.log(json);
 });
 
 // logout
@@ -127,7 +147,12 @@ async function generateProfile(user){
         loginText.textContent = 'Login';
         showProfile(false);
       } else {
+        console.log('RUN TOKEN FETCH');
+        localStorage.removeItem('user');
+        localStorage.setItem('user', JSON.stringify(await response.json()));
         const user = JSON.parse(localStorage.getItem('user'));
+        console.log(user);
+        avatar.src = 'https://10.120.32.94/restaurant/uploads/'+ user.avatar;
         loginText.textContent = user.username;
         await generateProfile(user);
         showProfile(true);
