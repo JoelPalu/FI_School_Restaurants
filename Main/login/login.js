@@ -155,8 +155,13 @@ async function generateProfile(user){
         localStorage.setItem('user', JSON.stringify(await response.json()));
         const user = JSON.parse(localStorage.getItem('user'));
         console.log(user);
-        avatarPrew.src = 'https://10.120.32.94/restaurant/uploads/'+ user.avatar;
-        avatar.src = 'https://10.120.32.94/restaurant/uploads/'+ user.avatar;
+        if (user.avatar){
+          avatarPrew.src = 'https://10.120.32.94/restaurant/uploads/'+ user.avatar;
+          avatar.src = 'https://10.120.32.94/restaurant/uploads/'+ user.avatar;
+        } else {
+          avatar.src = 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+          avatarPrew.src = 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+        }
         loginText.textContent = user.username;
         await generateProfile(user);
         showProfile(true);
