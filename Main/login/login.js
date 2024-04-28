@@ -135,6 +135,8 @@ async function generateProfile(user){
 }
 
 
+
+
 // when page loaded
 (async () => {
   if (localStorage.getItem('token') && localStorage.getItem('user')) {

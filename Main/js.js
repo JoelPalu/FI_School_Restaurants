@@ -1,24 +1,66 @@
-import {mapRestaurants} from './map.js';
+import {mapRestaurants, setRestaurants} from './map.js';
 import {adjustLayout} from './aside.js';
 import {generateNavbar} from './navbar.js';
 
 // Fetches the restaurants from the API and returns them as a JSON object
+let userLocation;
+
 async function getRestaurants() {
+  const success = (position) => {
+    userLocation = {
+      x: position.coords.latitude,
+      y: position.coords.longitude,
+    };
+  };
+
+  await new Promise((resolve, reject) => {
+    navigator.geolocation.getCurrentPosition(resolve, reject);
+  }).then(success);
   const response = await fetch('https://10.120.32.94/restaurant/api/v1/restaurants');
   const restaurants = await response.json();
-  console.log(restaurants);
+  restaurants.forEach((restaurant) => {
+    const lat1 = restaurant.location.coordinates[1];
+    const lon1 = restaurant.location.coordinates[0];
+    const lat2 = userLocation.x;
+    const lon2 = userLocation.y;
+
+    const R = 6371; // Radius of the earth in km
+    const dLat = deg2rad(lat2-lat1);  // deg2rad below
+    const dLon = deg2rad(lon2-lon1);
+    const a =
+      Math.sin(dLat/2) * Math.sin(dLat/2) +
+      Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+      Math.sin(dLon/2) * Math.sin(dLon/2)
+    ;
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    const distance = R * c; // Distance in km
+
+    restaurant.newdistance = distance;
+  });
+
   return restaurants;
 }
 
-const restaurants = getRestaurants();
+const restaurants = await getRestaurants();
+restaurants.sort((a, b) => a.newdistance - b.newdistance);
+console.log(restaurants);
 await generateNavbar();
-// Displays the restaurants on the map
-restaurants.then((restaurants) => {
-  mapRestaurants(restaurants);
-});
-
+const map = mapRestaurants(restaurants, 10);
 const observer = new MutationObserver(adjustLayout);
 observer.observe(document.getElementById('Daily'), {childList: true});
+
+// Displays the restaurants on the map
+const slider = document.getElementById('myRange');
+slider.addEventListener('input', () => {
+  console.log(slider.value*111.32);
+  setRestaurants(restaurants, map, (Math.pow(slider.value/100,4)));
+});
+
+
+function deg2rad(deg) {
+  return deg * (Math.PI/180)
+}
+
 
 
 // when page loaded
