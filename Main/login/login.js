@@ -17,6 +17,9 @@ const registerBox = document.getElementById('register_box');
 const uploadAvatar = document.getElementById('profile-avatar');
 const avatarPrew = document.getElementById('profile-avatar-preview');
 const avatar = document.getElementById('avatar');
+const updateForm = document.getElementById('profile-update-form');
+const error = document.getElementById('errorBox');
+
 
 
 const showProfile = (logged) => {
@@ -133,6 +136,42 @@ async function generateProfile(user){
   prfileUsername.value = user.username;
   profileEmail.value = user.email;
 }
+
+// update profile
+
+updateForm.addEventListener('submit', async (evt) => {
+  evt.preventDefault();
+  const data = serializeJson(updateForm);
+  const fetchOptions = {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + localStorage.getItem('token'),
+    },
+    body: JSON.stringify(data),
+  };
+
+  try {
+    const response = await fetch('https://10.120.32.94/restaurant/api/v1/users', fetchOptions);
+    const json = await response.json();
+
+    error.innerText = 'Updated successfully';
+    if (json.issues) {
+      console.log(json.issues);
+      error.innerText = json.issues[0].message;
+    } else {
+
+      localStorage.setItem('user', JSON.stringify(json.data));
+      const user = JSON.parse(localStorage.getItem('user'));
+      await generateProfile(user);
+    }
+
+
+  } catch (e) {
+    console.log(e.message);
+    error.innerText = 'Email or username already exists';
+  }
+});
 
 
 
