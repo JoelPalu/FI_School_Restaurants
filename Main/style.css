@@ -1,3 +1,46 @@
+.oswald-regular {
+           font-family: "Oswald", sans-serif;
+           font-optical-sizing: auto;
+           font-weight: 400;
+           font-style: normal;
+         }
+
+body{
+  margin: 0;
+  padding: 0;
+  --main: #e5f6e5;
+  --secondary: #4B3B40;
+  --hihlight: #EFB73FFF;
+
+  background-color: var(--main);
+}
+
+#nav-title{
+  font-family: Oswald, sans-serif;
+  font-weight: 900;
+  color: var(--secondary);
+  transition-duration: 0.5s;
+  margin-right: -7rem;
+}
+#nav-title:hover {
+  color: var(--hihlight);
+  animation: rainbow 10s infinite;
+  transition-duration: 0.5s;
+}
+
+@keyframes rainbow {
+  0% { color: red; }
+  14% { color: orange; }
+  28% { color: yellow; }
+  42% { color: lime; }
+  57% { color: blue; }
+  71% { color: indigo; }
+  85% { color: violet; }
+  100% { color: red; }
+}
+
+
+
 
 #main {
   display: flex;
@@ -9,6 +52,7 @@
   z-index: 5;
   position: absolute;
   width: 50%;
+  background: var(--hihlight);
 }
 
 #map-box {
@@ -33,7 +77,25 @@
   padding: 1em;
   box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
   transition: width 0.3s ease-in-out;
+  font-family: Oswald, sans-serif;
+  font-weight: 400;
+  color: var(--secondary);
 
+}
+
+#Daily button {
+  background-color: var(--secondary);
+  color: white;
+  border: none;
+  padding: 0.5em;
+  margin: 0.5em;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#Daily button:hover {
+  background-color: #E7E415FF;
+  color: var(--secondary);
 }
 
 #nav-profile-box {
@@ -41,6 +103,17 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  transition-duration: 1s;
+
+}
+
+#nav-profile-box:hover {
+  transform: scale(1.1);
+  transition-duration: 1s;
+
+  background-color: var(--secondary);
+  padding-right: 5px;
+  border-radius: 1rem;
 }
 
 
@@ -58,10 +131,37 @@
   object-fit: cover;
 }
 
+
 #nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
   box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+  font-family: Oswald, sans-serif;
+  font-weight: 700;
+}
+
+nav a {
+  text-decoration: none;
+  color: black;
+  transition-duration: 0.3s;
+}
+
+nav a:hover {
+  color: var(--hihlight);
+  transform-style: initial;
+  transition-property: font-size;
+  transition-duration: 0.3s;
+  font-size: 20px;
+}
+
+footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+  font-family: Oswald, sans-serif;
+  font-weight: 700;
 }

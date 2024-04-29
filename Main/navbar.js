@@ -1,8 +1,10 @@
 async function generateNavbar() {
   const header = document.getElementById('header');
   // Create h1 element
-  const h1 = document.createElement('h1');
+  const h1 = document.createElement('a');
   h1.textContent = 'Finnish School Restaurants';
+  h1.href = '/FI_School_Restaurants/Main/html.html';
+  h1.id = 'nav-title';
 
   // Create nav element
   const nav = document.createElement('nav');
@@ -10,16 +12,8 @@ async function generateNavbar() {
 
   // Create anchor elements
   const home = document.createElement('a');
-  home.href = '../html.html';
-  home.textContent = 'Home';
-
-  const about = document.createElement('a');
-  about.href = '';
-  about.textContent = 'About';
-
-  const contact = document.createElement('a');
-  contact.href = '';
-  contact.textContent = 'Contact';
+  home.href = '/FI_School_Restaurants/Main/html.html';
+  home.textContent = 'Map';
 
   // Create div element for profile box
   const profileBox = document.createElement('div');
@@ -50,9 +44,8 @@ async function generateNavbar() {
 
 
   // Append anchor elements to nav
+  nav.appendChild(h1);
   nav.appendChild(home);
-  nav.appendChild(about);
-  nav.appendChild(contact);
   nav.appendChild(login);
 
   // Append login to link box
@@ -67,7 +60,7 @@ async function generateNavbar() {
 
 
   // Append h1 and nav to the body or any other parent element
-  header.appendChild(h1);
+
   header.appendChild(nav);
 }
 
