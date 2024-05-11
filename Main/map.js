@@ -1,9 +1,8 @@
-import {getMenu} from './aside.js';
+import {getMenu, adjustLayout} from './aside.js';
 
 
 let markers;
 export function mapRestaurants(restaurants, renderDistance) {
-
   navigator.geolocation.getCurrentPosition(success);
   const map = L.map('map');
 
@@ -30,7 +29,6 @@ export function mapRestaurants(restaurants, renderDistance) {
     restaurants.forEach((restaurant) => {
       restaurant.distance = Math.sqrt( Math.pow(restaurant.location.coordinates[0] - userLocation.y, 2) + Math.pow(restaurant.location.coordinates[1] - userLocation.x, 2));
     });
-    restaurants.sort((a, b) => a.distance - b.distance);
     setRestaurants(restaurants, map, renderDistance);
   }
   return map;
@@ -70,9 +68,10 @@ export async function setRestaurants(restaurants, map, renderDistance) {
       first = true;
     }
 
-    if(restaurant._id === JSON.parse(localStorage.getItem('user')).favouriteRestaurant){
-      marker.setIcon(customIconFav).setZIndexOffset(101);
+    if(localStorage.getItem('User') && JSON.parse(localStorage.getItem('user')).favouriteRestaurant){
+        marker.setIcon(customIconFav).setZIndexOffset(101);
     }
+
 
 
 
@@ -84,11 +83,18 @@ export async function setRestaurants(restaurants, map, renderDistance) {
         const user = JSON.parse(localStorage.getItem('user'));
         user.favouriteRestaurant = restaurant._id;
         localStorage.setItem('user', JSON.stringify(user));
-        console.log('Favourite button clicked');
         await setFavRestaurant(restaurant._id);
         await setRestaurants(restaurants, map, renderDistance);
       });
+      const close = document.createElement('button');
+      close.textContent = 'Close';
+      close.addEventListener('click', () => {
+        const daily = document.getElementById('Daily');
+        daily.innerHTML = '';
+        adjustLayout();
+      });
 
+      aside.appendChild(close);
       aside.appendChild(favourite);
       await getMenu(restaurant, 'en');
     });
@@ -105,7 +111,7 @@ export async function setRestaurants(restaurants, map, renderDistance) {
     });
     markers.addLayer(marker);
   }
-};
+}
 
 
 export async function setFavRestaurant(restaurantId){

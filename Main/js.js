@@ -4,6 +4,7 @@ import {generateNavbar} from './navbar.js';
 
 // Fetches the restaurants from the API and returns them as a JSON object
 let userLocation;
+let restaurants;
 
 async function getRestaurants() {
   const success = (position) => {
@@ -33,30 +34,25 @@ async function getRestaurants() {
       Math.sin(dLon/2) * Math.sin(dLon/2)
     ;
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-    const distance = R * c; // Distance in km
-
-    restaurant.newdistance = distance;
+     // Distance in km
+    restaurant.newdistance = R * c * 1;
   });
-
+  restaurants.sort((a, b) => (a.newdistance * 1) - (b.newdistance * 1));
   return restaurants;
-}
+};
 
-const restaurants = await getRestaurants();
-restaurants.sort((a, b) => a.newdistance - b.newdistance);
-console.log(restaurants);
-await generateNavbar();
-const map = mapRestaurants(restaurants, 10);
-const observer = new MutationObserver(adjustLayout);
-observer.observe(document.getElementById('Daily'), {childList: true});
+async function generateMap() {
+  const map = mapRestaurants(restaurants, 10);
+  const observer = new MutationObserver(adjustLayout);
+  observer.observe(document.getElementById('Daily'), {childList: true});
 
 // Displays the restaurants on the map
-const slider = document.getElementById('myRange');
-slider.addEventListener('input', () => {
-  console.log(slider.value*111.32);
-  setRestaurants(restaurants, map, (Math.pow(slider.value/100,4)));
-});
+  const slider = document.getElementById('myRange');
+  slider.addEventListener('input', () => {
+    setRestaurants(restaurants, map, (Math.pow(slider.value / 100, 4)));
+  });
 
-
+}
 function deg2rad(deg) {
   return deg * (Math.PI/180)
 }
@@ -65,8 +61,13 @@ function deg2rad(deg) {
 
 // when page loaded
 (async () => {
+  restaurants = await getRestaurants();
+  await generateNavbar();
+  await generateMap();
+  console.log(restaurants);
   const loginText = document.getElementById('login-text');
   const avatar = document.getElementById('avatar');
+  avatar.src = 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
   if (localStorage.getItem('token') && localStorage.getItem('user')) {
     try {
       const fetchOptions = {
@@ -77,6 +78,7 @@ function deg2rad(deg) {
       const response = await fetch('https://10.120.32.94/restaurant/api/v1/users/token', fetchOptions);
       if (!response.ok) {
         loginText.textContent = 'Login';
+
       } else {
         console.log('RUN TOKEN FETCH');
         localStorage.removeItem('user');

@@ -1,10 +1,32 @@
 const restaurantModal = (restaurant, menu) => {
   let menuHtml = '';
   try {
-    menu.forEach((course) => {
-      const {name: courseName, price, diets} = course;
-      menuHtml += `<tr><td>${courseName}</td><td>${price}</td><td>${diets}</td></tr>`;
-    });
+    if (menu.length === 0) {
+      menuHtml += `<tr><td>No</td><td>menu</td><td>available</td></tr>`;
+    } else {
+      menu.sort((a, b) => a.date + b.date);
+      menu.forEach((days) => {
+        console.log('days', days);
+        const {date, courses} = days;
+        menuHtml += `<tr><th><br></th></tr>`;
+        const today = new Date();
+        const options = { weekday: 'long', day: 'numeric', month: 'long' };
+        let formattedToday = today.toLocaleDateString('en-GB', options);
+        formattedToday = formattedToday.replace(',', '');
+        console.log('formattedToday', formattedToday);
+        if (date === formattedToday) {
+          menuHtml += `<tr><th class="today">Today ${date}</th></tr>`;
+        } else {
+          menuHtml += `<tr><th>${date}</th></tr>`;
+        }
+
+
+        courses.forEach((course) => {
+          const {name: name, price, diets} = course;
+          menuHtml += `<tr><td>${name}</td><td>${price}</td><td>${diets}</td></tr>`;
+        });
+      });
+    }
   } catch (error) {
     console.log(error);
     menuHtml += `<tr><td>Failed</td><td>to load</td><td>menu</td></tr>`;
@@ -27,9 +49,13 @@ export async function getMenu(restaurant, lang) {
 
 
   try {
-    const response = await fetch(`https://10.120.32.94/restaurant/api/v1/restaurants/daily/${restaurant._id}/${lang}`);
+    const response = await fetch(`https://10.120.32.94/restaurant/api/v1/restaurants/weekly/${restaurant._id}/${lang}`);
     const data = await response.json();
-    const menu = data['courses'];
+    const menu = data.days;
+    menu.sort((a, b) => a.date - b.date);
+
+    console.log(menu);
+
 
     asideBlock.innerHTML += restaurantModal(restaurant, menu);
     aside.appendChild(asideBlock);
@@ -48,9 +74,14 @@ export function adjustLayout() {
     daily.style.width = '0';
     daily.style.display = 'flex';
   } else {
-    daily.style.display = 'block';
-    map.style.width = '70%';
-    daily.style.width = '30%';
+    if (screen.width < 500) {
+      daily.style.display = 'block';
+      daily.style.width = '100%';
+      map.style.width = '0';
+    } else {
+      daily.style.display = 'block';
+      map.style.width = '70%';
+      daily.style.width = '30%';
+    }
   }
 }
-
