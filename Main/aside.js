@@ -52,9 +52,6 @@ export async function getMenu(restaurant, lang) {
     const response = await fetch(`https://10.120.32.94/restaurant/api/v1/restaurants/weekly/${restaurant._id}/${lang}`);
     const data = await response.json();
     const menu = data.days;
-    menu.sort((a, b) => a.date - b.date);
-
-    console.log(menu);
 
 
     asideBlock.innerHTML += restaurantModal(restaurant, menu);
